@@ -16,6 +16,11 @@ class Category extends Model
         return $this->morphOne(Image::class, 'imageable');
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     protected $appends = ['created_from'];
 
     public function getCreatedFromAttribute()

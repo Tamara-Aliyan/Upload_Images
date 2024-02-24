@@ -20,6 +20,15 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function scopePriceGreaterThan($query, $value = 150.00)
+    {
+        return $query->where('price', '<=', $value);
+    }
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
