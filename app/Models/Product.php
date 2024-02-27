@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Traits\HasImagesTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory,HasImagesTrait;
 
     protected $fillable = ['name','description','price','user_id','category_id'];
 
@@ -20,19 +21,19 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-    public function owner()
+
+    public function scopeUserNameContainsA($query)
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $query->whereHas('user', function ($subquery) {
+            $subquery->where('name', 'like', '%a%');
+        });
     }
 
     public function scopePriceGreaterThan($query, $value = 150.00)
     {
-        return $query->where('price', '<=', $value);
+        return $query->where('price', '>=', $value);
     }
-    public function images()
-    {
-        return $this->morphMany(Image::class, 'imageable');
-    }
+
     protected $appends = ['created_from'];
 
     public function getCreatedFromAttribute()

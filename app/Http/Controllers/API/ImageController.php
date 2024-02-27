@@ -5,12 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Services\ImageService;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Requests\StoreImageRequest;
 
 class ImageController extends Controller
 {
-
     public function upload_images(Request $request, $entityType, $entityId)
     {
         $images = [];

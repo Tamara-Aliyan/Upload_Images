@@ -3,18 +3,14 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Traits\HasImagesTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory,HasImagesTrait;
     protected $fillable = ['name'];
-
-    public function image()
-    {
-        return $this->morphOne(Image::class, 'imageable');
-    }
 
     public function products()
     {

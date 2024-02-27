@@ -11,12 +11,11 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with(['products.owner' => function ($query) {
-            $query->where('name', 'like', '%a%');
+        $categories = Category::with(['products' => function ($query) {
+            $query->userNameContainsA();
         }])
         ->get();
 
-        // Apply the global filtering for products priced greater than or equal to 150 for each category
         $categories->each(function ($category) {
             $category->products = $category->products()->priceGreaterThan()->get();
         });
@@ -30,14 +29,15 @@ class CategoryController extends Controller
         return response()->json(['category' => $category], 201);
     }
 
-    public function show($id)
+    public function show($categoryId)
     {
-        $category = Category::with(['products.owner' => function ($query) {
-            $query->where('name', 'like', '%a%');
+        $category = Category::with(['products' => function ($query) {
+            $query->userNameContainsA();
         }])
-        ->findOrFail($id);
-        // Apply the global filtering for products priced greater than or equal to 150
+        ->findOrFail($categoryId);
+
         $category->products = $category->products()->priceGreaterThan()->get();
+
         return response()->json($category);
     }
 
