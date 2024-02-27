@@ -25,6 +25,8 @@ Route::prefix('v1')->group(function(){
     Route::apiResource('users', UserController::class);
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
-    Route::post('/upload/images/{entityType}/{entityId}', [ImageController::class, 'upload_images']);
-    Route::post('/upload/image/{entityType}/{entityId}', [ImageController::class, 'upload_image']);
+
+    Route::post('/add-images/{type}/{id}', [ImageController::class, 'addImages']);
+    Route::put('/update-images/{type}/{id}', [ImageController::class, 'updateImages']);
+    Route::delete('/delete-images/{type}/{id}', [ImageController::class, 'deleteImages']);
 });
