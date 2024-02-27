@@ -10,7 +10,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Category extends Model
 {
     use HasFactory,HasImagesTrait;
-    protected $fillable = ['name'];
+    protected $fillable = ['name','parent_id'];
+
+    public function subcategories()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
 
     public function products()
     {

@@ -10,18 +10,24 @@ use App\Http\Requests\StoreCategoryRequest;
 class CategoryController extends Controller
 {
     public function index()
-    {
-        $categories = Category::with(['products' => function ($query) {
-            $query->userNameContainsA();
-        }])
+{
+    $categories = Category::with([
+            'subcategories.products',
+            'products' => function ($query) {
+                $query->userNameContainsA()->priceGreaterThan();
+            }
+        ])
+        ->whereNull('parent_id')
         ->get();
 
-        $categories->each(function ($category) {
-            $category->products = $category->products()->priceGreaterThan()->get();
-        });
+    $categories->each(function ($category) {
+        $category->products = $category->products->merge(
+            $category->subcategories->flatMap->products
+        );
+    });
 
-        return response()->json($categories);
-    }
+    return response()->json(['categories' => $categories]);
+}
 
     public function store(StoreCategoryRequest $request)
     {
@@ -30,16 +36,17 @@ class CategoryController extends Controller
     }
 
     public function show($categoryId)
-    {
-        $category = Category::with(['products' => function ($query) {
-            $query->userNameContainsA();
-        }])
-        ->findOrFail($categoryId);
+{
+    $category = Category::with([
+            'subcategories.products',
+            'products' => function ($query) {
+                $query->userNameContainsA()->priceGreaterThan();
+            }
+        ])
+        ->find($categoryId);
 
-        $category->products = $category->products()->priceGreaterThan()->get();
-
-        return response()->json($category);
-    }
+    return response()->json(['category' => $category]);
+}
 
     public function update(StoreCategoryRequest $request, Category $category)
     {
