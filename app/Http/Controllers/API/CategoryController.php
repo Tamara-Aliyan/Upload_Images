@@ -5,7 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -14,7 +15,7 @@ class CategoryController extends Controller
     $categories = Category::with([
             'subcategories.products',
             'products' => function ($query) {
-                $query->userNameContainsA()->priceGreaterThan();
+                $query->userNameContainsA();
             }
         ])
         ->whereNull('parent_id')
@@ -40,7 +41,7 @@ class CategoryController extends Controller
     $category = Category::with([
             'subcategories.products',
             'products' => function ($query) {
-                $query->userNameContainsA()->priceGreaterThan();
+                $query->userNameContainsA();
             }
         ])
         ->find($categoryId);
@@ -48,7 +49,7 @@ class CategoryController extends Controller
     return response()->json(['category' => $category]);
 }
 
-    public function update(StoreCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
         $category->update($request->all());
         return response()->json(['category' => $category]);

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUserRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +21,9 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $category = $this->route('categories');
         return [
-            'name'  =>['required','string','max:50','unique:users,name'],
-            'email' =>['required','email','unique:users','unique:users,name'],
+            'name' => 'required|string|max:50|unique:categories,name,' . $category,
         ];
     }
 }

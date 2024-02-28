@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Traits\HasImagesTrait;
+use App\Models\Scopes\PriceFilterScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -29,9 +30,11 @@ class Product extends Model
         });
     }
 
-    public function scopePriceGreaterThan($query, $value = 150.00)
+    protected static function boot()
     {
-        return $query->where('price', '>=', $value);
+        parent::boot();
+
+        static::addGlobalScope(new PriceFilterScope);
     }
 
     protected $appends = ['created_from'];
