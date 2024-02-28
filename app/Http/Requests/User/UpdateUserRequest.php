@@ -11,7 +11,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,8 +21,16 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->route('user'); // Assuming your route parameter is named 'user'
+
         return [
-            //
+            'name'  => ['required', 'string', 'max:50', "unique:users,name,{$userId}"],
+            'email' => [
+                'required',
+                'email',
+                "unique:users,email,{$userId}", // Check uniqueness for email excluding the current user
+                "unique:users,name,{$userId}"   // Additional check to ensure name remains unique
+            ],
         ];
     }
 }
